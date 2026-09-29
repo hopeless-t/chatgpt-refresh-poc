@@ -1,36 +1,35 @@
-# Ready-to-post community note
+# Ready-to-paste reply for the existing OpenAI Developer Community thread
 
-## Title
+Thread:
 
-[iOS] Explicit “Refresh Conversation” action for read-only resync
+https://community.openai.com/t/feature-request-refresh-conversation-button/1391284
 
-## Body
+## Reply
 
-I’d like to propose an explicit **Refresh Conversation** action in the ChatGPT iOS app.
+I ran into this same iOS workflow and put together a small Swift proof-of-concept to make the requested semantics concrete:
 
-The use case is narrow: when the server-side conversation has advanced but the currently open iOS view remains stale, the user should be able to re-fetch and reconcile the latest conversation state without force-quitting the app.
+https://github.com/hopeless-t/chatgpt-refresh-poc
 
-Suggested contract:
-
-- fetch the latest state for the currently open conversation;
-- no-op when the server has no newer revision;
-- reconcile newer server-backed messages into the visible conversation;
-- preserve unsent draft text and scroll position where possible;
-- never send, regenerate, branch, or create a new conversation;
-- never let an older response overwrite newer state;
-- treat the operation as **observation/reconciliation only**, with no generation or tool-execution authority.
-
-In short:
+The PoC treats **Refresh Conversation** as a strictly read-only synchronization action:
 
 ```text
 Refresh = Observe + Reconcile + Render
+
 Refresh ≠ Regenerate
 Refresh ≠ Send
 Refresh ≠ New Chat
 ```
 
-I made a small Swift proof-of-concept that models the behavior contract without using private ChatGPT APIs:
+The suggested acceptance contract is:
 
-https://github.com/hopeless-t/chatgpt-refresh-poc
+- fetch the latest state for the currently open conversation;
+- no-op when there is no newer server revision;
+- reconcile newer server-backed messages into the visible conversation;
+- preserve unsent draft text, scroll anchor, and local-only UI state;
+- reject a snapshot for a different conversation;
+- never let an older revision overwrite a newer one;
+- never send, regenerate, branch, create a new conversation, or start/replay a tool action.
 
-The PoC includes acceptance tests for newer revision application, stale revision no-op behavior, identity mismatch rejection, and preservation of local-only UI state.
+The repository includes a minimal Swift implementation, a SwiftUI `arrow.clockwise` example, and tests for newer-revision application, stale-revision no-op behavior, conversation-identity mismatch, and preservation of local-only state.
+
+This does not use or guess any private ChatGPT API. It is only a behavior-contract PoC intended to make the feature request easier to evaluate and implement.
