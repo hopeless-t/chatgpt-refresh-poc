@@ -10,6 +10,12 @@ This repository is **not** ChatGPT source code and does not use private ChatGPT 
 
 A mobile conversation can visibly lag behind server state. Restarting the app may cause the completed server-side state to appear, which suggests a useful product primitive: expose a safe, explicit read-only refresh without requiring an app restart.
 
+The matching OpenAI Developer Community discussion is:
+
+- https://community.openai.com/t/feature-request-refresh-conversation-button/1391284
+
+OpenAI Support replied there on September 8, 2026 that restarting the app can help load the latest messages and that the request for a dedicated refresh button would be passed along.
+
 ## Semantic contract
 
 `Refresh Conversation` MUST:
@@ -79,6 +85,7 @@ The executable demonstrates local revision `104` refreshing to server revision `
 - `Tests/RefreshCoreTests/...` — acceptance tests
 - `Examples/RefreshConversationButton.swift` — minimal SwiftUI control
 - `FEATURE_REQUEST.md` — product-ready proposal text
+- `COMMUNITY_POST.md` — ready-to-paste reply for the existing community thread
 
 ## Non-goals
 
@@ -90,7 +97,11 @@ See [`ACCEPTANCE.md`](ACCEPTANCE.md) for the compact behavior matrix used to kee
 
 ## Community submission
 
-[`COMMUNITY_POST.md`](COMMUNITY_POST.md) contains a ready-to-post proposal that links this PoC to the iOS feature request discussion.
+The intended destination is the existing thread rather than a duplicate topic:
+
+https://community.openai.com/t/feature-request-refresh-conversation-button/1391284
+
+[`COMMUNITY_POST.md`](COMMUNITY_POST.md) contains the reply text.
 
 ## Verification
 
